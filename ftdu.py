@@ -122,7 +122,7 @@ class FtDuino:
                     pwm will be set to the max. pwm value, otherwise to the
                     min. pwm value.
         """
-        if mode not in (0, HIGH, LOW):
+        if mode not in (OFF, HIGH, LOW):
             raise ValueError('Invalid mode "{0}". Use 0, 1 or 2.'.format(mode))
         if pwm is None:
             pwm = _MAX_PWM if mode == HIGH else _MIN_PWM

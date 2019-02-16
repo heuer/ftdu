@@ -45,6 +45,7 @@ setup(
     platforms=['any'],
     install_requires=['pyserial>=3.0'],
     packages=find_packages(exclude=['docs', 'tests', 'sandbox', 'htmlcov']),
+    py_modules=['ftdu'],
     include_package_data=True,
     keywords=['fischertechnik', 'ftduino'],
     classifiers=[

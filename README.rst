@@ -32,3 +32,8 @@ Library
     0
     >>> ftd.close()
 
+
+Documentation
+-------------
+
+The docs are provided under <https://ftdu.readthedocs.io>

@@ -30,3 +30,5 @@ Library
     >>> ftd.o1 = True  # Enable O1
     >>> ftd.i1  # Ask value of input port I1
     0
+    >>> ftd.close()
+

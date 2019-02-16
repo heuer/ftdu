@@ -13,7 +13,7 @@ Install the ftduino_direct sketch, see <https://github.com/PeterDHabermehl/ftdui
 
 Use ``pip`` to install ftdu::
 
-    $ pip install git+https://github.com/heuer/ftdu.git@develop
+    $ pip install ftdu
 
 
 Usage

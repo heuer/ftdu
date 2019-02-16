@@ -8,7 +8,7 @@
 """\
 Python client to communicate with a ftDuino via USB.
 
-It uses the ```ftduino_direct``` sketch written by Peter Habermehl.
+It uses the ``ftduino_direct`` sketch written by Peter Habermehl.
 See <https://github.com/PeterDHabermehl/ftduino_direct>
 """
 from __future__ import absolute_import, unicode_literals, print_function
@@ -64,10 +64,10 @@ class BaseFtDuino:
         """\
         Initializes a connection to a ftDuino.
 
-        If the `path` is ```None`` (default), the first ftDuino found by a scan
+        If the `path` is ``None`` (default), the first ftDuino found by a scan
         will be used.
 
-        :param path: Optoinal device path to ftDuino.
+        :param path: Optional device path to ftDuino.
         """
         if path is None:
             try:
@@ -94,7 +94,7 @@ class BaseFtDuino:
 
         :param cmd: The command to execute.
         :rtype: str
-        :return: The result of the command or ```None``` in case of an error.
+        :return: The result of the command or ``None`` in case of an error.
         """
         conn = self._conn
         conn.reset_input_buffer()
@@ -110,7 +110,7 @@ class BaseFtDuino:
         """\
         Closes the connection to the ftDuino.
 
-        Use the ```with``` statement to ensure that this method is called.
+        Use the ``with`` statement to ensure that this method is called.
 
         .. code-block:: python
 
@@ -125,8 +125,8 @@ class BaseFtDuino:
 
         :param port: Port name, i.e. 'O1'. The port name is case-insensitive.
         :param mode: 0 = OFF, 1 = HIGH, 2 = LOW
-        :param pwm: Pulse-width modulation value. If ```None``` the value
-                    depends on the mode. If the mode is ```1``` (high), the
+        :param pwm: Pulse-width modulation value. If ``None`` the value
+                    depends on the mode. If the mode is ``1`` (high), the
                     pwm will be set to the max. pwm value, otherwise to the
                     min. pwm value.
         """
@@ -152,7 +152,9 @@ class BaseFtDuino:
         Sets the mode for the provided input port.
 
         :param port: Port name, i.e. 'I1'. The port name is case-insensitive.
-        :param mode: 'switch', 'resistance', or 'voltage' (case-insensitive)
+        :param mode: 'switch', 'resistance', or 'voltage' (case-insensitive), see
+                     constants ``ftdu.INPUT_MODE_SWITCH``, ``ftdu.INPUT_MODE_RESISTANCE``
+                     and ``ftdu.INPUT_MODE_VOLTAGE``.
         :raise: ValueError in case the provided mode is unknown.
         """
         if mode.lower() not in _VALID_INPUT_MODES:
@@ -211,7 +213,7 @@ class BaseFtDuino:
         """\
         Enables / disables the ultrasonic sensor.
 
-        :param bool enable: ```True``` to enable, ```False``` to disable.
+        :param bool enable: ``True`` to enable, ``False`` to disable.
         """
         self.comm('ultrasonic_enable {0}'.format('true' if enable else 'false'))
 
@@ -220,11 +222,13 @@ class BaseFtDuino:
         Sets the provided motor port into the given state.
 
         :param port: Port name, i.e. 'M1'. The port name is case-insensitive.
-        :param mode: 'left', 'right', or 'brake' (case-insensitive).
-        :param pwm: Pulse-width modulation value. If ```None``` the max. PWM value will be used.
+        :param mode: 'off',  'left', 'right', or 'brake' (case-insensitive), see constants
+                     ``ftdu.MOTOR_OFF``, ``ftdu.MOTOR_LEFT``, ``ftdu.MOTOR_RIGHT``,
+                     and ``ftdu.MOTOR_BRAKE``.
+        :param pwm: Pulse-width modulation value. If ``None`` the max. PWM value will be used.
         """
         if mode.lower() not in _VALID_MOTOR_DIRECTIONS:
-            raise ValueError('Invalid direction "{0}", use {1}'.format(mode, _VALID_MOTOR_DIRECTIONS))
+            raise ValueError('Invalid motor mode "{0}", use {1}'.format(mode, _VALID_MOTOR_DIRECTIONS))
         if pwm is None:
             pwm = MAX
         self.comm('motor_set {0} {1} {2}'.format(port, mode, pwm))
@@ -234,12 +238,14 @@ class BaseFtDuino:
         Sets the state of an encoder motor.
 
         :param port: Port name, i.e. 'M1'. The port name is case-insensitive.
-        :param mode: 'left', 'right', or 'brake' (case-insensitive).
+        :param mode: 'off',  'left', 'right', or 'brake' (case-insensitive), see constants
+                     ``ftdu.MOTOR_OFF``, ``ftdu.MOTOR_LEFT``, ``ftdu.MOTOR_RIGHT``,
+                     and ``ftdu.MOTOR_BRAKE``.
         :param pwm: Pulse-width modulation value.
         :param counter: Counter value. The motor stops after reaching the value.
         """
         if mode.lower() not in _VALID_MOTOR_DIRECTIONS:
-            raise ValueError('Invalid direction "{0}", use {1}'.format(mode, _VALID_MOTOR_DIRECTIONS))
+            raise ValueError('Invalid motor mode "{0}", use {1}'.format(mode, _VALID_MOTOR_DIRECTIONS))
         self.comm('motor_counter {0} {1} {2} {3}'.format(port, mode, pwm, counter))
 
     def motor_counter_active(self, port):
@@ -247,17 +253,17 @@ class BaseFtDuino:
         Returns if a counter is active for the given motor port.
 
         :param port: Port name, i.e. 'M1'. The port name is case-insensitive.
-        :return: ```True``` if the counter is active, otherwise ```False``.
+        :return: ``True`` if the counter is active, otherwise ``False``.
         """
         return self.comm('motor_counter_active {0}'.format(port)) == '1'
 
     def motor_counter_set_brake(self, port, enable):
         """\
-        Indicates if the motor should be stopped indirectly (```False``) or
-        directly (```True```).
+        Indicates if the motor should be stopped indirectly (``False``) or
+        directly (``True``).
 
         :param port: Port name, i.e. 'M1'. The port name is case-insensitive.
-        :param enable: ```True``` to set the brake, otherwise ```False```
+        :param enable: ``True`` to set the brake, otherwise ``False``
         """
         self.comm('motor_counter_set_brake {0} {1}'.format(port, ('true' if enable else 'false')))
 
@@ -265,7 +271,7 @@ class BaseFtDuino:
         """\
         Switches the LED on or off
 
-        :param enable: ```True``` to switch the LED on, ```False``` to switch the LED off.
+        :param enable: ``True`` to switch the LED on, ``False`` to switch the LED off.
         """
         self.comm('led_set {0}'.format(1 if enable else 0))
 
@@ -302,7 +308,7 @@ class FtDuino(BaseFtDuino):
     This class provides all functions of the :class:`BaseFtDuino` and
     adds a higher level API to access ports via attributes.
 
-    The red LED can be switched on and off via ```led = True``` or ```led = False```.
+    The red LED can be switched on and off via ``led = True`` or ``led = False``.
 
     .. code-block:: python
 
@@ -311,7 +317,7 @@ class FtDuino(BaseFtDuino):
 
 
     The input ports can be read by using the port names (i1 .. i8), i.e.
-    ```ftd.i1``` to get the value of input port "I1".
+    ``ftd.i1`` to get the value of input port "I1".
 
     The output ports (o1 .. o8) can be enabled / disabled by assigning a boolean
     value.
@@ -355,7 +361,7 @@ class FtDuino(BaseFtDuino):
         """\
         Returns if the motor counter for port M1 is active.
 
-        :return: ```True``` if active, ```False``` otherwise.
+        :return: ``True`` if active, ``False`` otherwise.
         """
         return self.motor_counter_active('M1')
 
@@ -363,7 +369,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the rotation of the motor at M1 to "left".
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -373,7 +379,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the rotation of the motor at M1 to "right".
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -393,7 +399,7 @@ class FtDuino(BaseFtDuino):
 
         See also :py:func:`motor_counter_set_brake`
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -404,7 +410,7 @@ class FtDuino(BaseFtDuino):
         """\
         Returns if the motor counter for port M2 is active.
 
-        :return: ```True``` if active, ```False``` otherwise.
+        :return: ``True`` if active, ``False`` otherwise.
         """
         return self.motor_counter_active('M2')
 
@@ -412,7 +418,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the rotation of the motor at M2 to "left".
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -422,7 +428,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the rotation of the motor at M2 to "right".
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -442,7 +448,7 @@ class FtDuino(BaseFtDuino):
 
         See also :py:func:`motor_counter_set_brake`
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -453,7 +459,7 @@ class FtDuino(BaseFtDuino):
         """\
         Returns if the motor counter for port M3 is active.
 
-        :return: ```True``` if active, ```False``` otherwise.
+        :return: ``True`` if active, ``False`` otherwise.
         """
         return self.motor_counter_active('M3')
 
@@ -461,7 +467,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the rotation of the motor at M3 to "left".
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -471,7 +477,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the rotation of the motor at M3 to "right".
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -491,7 +497,7 @@ class FtDuino(BaseFtDuino):
 
         See also :py:func:`motor_counter_set_brake`
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -502,7 +508,7 @@ class FtDuino(BaseFtDuino):
         """\
         Returns if the motor counter for port M4 is active.
 
-        :return: ```True``` if active, ```False``` otherwise.
+        :return: ``True`` if active, ``False`` otherwise.
         """
         return self.motor_counter_active('M4')
 
@@ -510,7 +516,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the rotation of the motor at M4 to "left".
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -520,7 +526,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the rotation of the motor at M4 to "right".
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -540,7 +546,7 @@ class FtDuino(BaseFtDuino):
 
         See also :py:func:`motor_counter_set_brake`
 
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -551,7 +557,7 @@ class FtDuino(BaseFtDuino):
         Sets the rotation of the motor at the provided port to "left".
 
         :param port: Motor port 'M1' .. 'M4'. The port name is case-insensitive.
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -567,7 +573,7 @@ class FtDuino(BaseFtDuino):
         Sets the rotation of the motor at the provided port to "right".
 
         :param port: Motor port 'M1' .. 'M4'. The port name is case-insensitive.
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -596,7 +602,7 @@ class FtDuino(BaseFtDuino):
         Brakes the motor at the provided port.
 
         :param port: Motor port 'M1' .. 'M4'. The port name is case-insensitive.
-        :param pwm: Pulse-width modulation value. If ```None``` the value is
+        :param pwm: Pulse-width modulation value. If ``None`` the value is
                     set to the maximum.
         :param steps: Number of steps until the motor stops (encoder motor required).
         """
@@ -609,11 +615,11 @@ class FtDuino(BaseFtDuino):
 
     def _set_motor_counter_brake(self, port, enable):
         """\
-        Indicates if the motor should be stopped indirectly (```False``) or
-        directly (```True```).
+        Indicates if the motor should be stopped indirectly (``False``) or
+        directly (``True``).
 
         :param port: Motor port 'M1' .. 'M4'. The port name is case-insensitive.
-        :param enable: ```True``` to enable, ```False``` to disable.
+        :param enable: ``True`` to enable, ``False`` to disable.
         """
         self.motor_counter_set_brake(port, enable)
 
@@ -638,7 +644,7 @@ class FtDuino(BaseFtDuino):
         """\
         Sets the LED on / off.
 
-        :param bool enable: ```True``` to put the light on, ```False``` to switch it off.
+        :param bool enable: ``True`` to put the light on, ``False`` to switch it off.
         """
         self.led_set(enable)
 
@@ -802,7 +808,7 @@ class FtDuino(BaseFtDuino):
         Returns the state of counter "C1".
 
         :rtype: bool
-        :return: ```True``` if the counter is active, otherwise ```False```.
+        :return: ``True`` if the counter is active, otherwise ``False``.
         """
         return self.counter_get_state('C1')
 
@@ -812,7 +818,7 @@ class FtDuino(BaseFtDuino):
         Returns the state of counter "C2".
 
         :rtype: bool
-        :return: ```True``` if the counter is active, otherwise ```False```.
+        :return: ``True`` if the counter is active, otherwise ``False``.
         """
         return self.counter_get_state('C2')
 
@@ -822,7 +828,7 @@ class FtDuino(BaseFtDuino):
         Returns the state of counter "C3".
 
         :rtype: bool
-        :return: ```True``` if the counter is active, otherwise ```False```.
+        :return: ``True`` if the counter is active, otherwise ``False``.
         """
         return self.counter_get_state('C3')
 
@@ -832,7 +838,7 @@ class FtDuino(BaseFtDuino):
         Returns the state of counter "C4".
 
         :rtype: bool
-        :return: ```True``` if the counter is active, otherwise ```False```.
+        :return: ``True`` if the counter is active, otherwise ``False``.
         """
         return self.counter_get_state('C4')
 
@@ -888,7 +894,7 @@ def ftduino_find_by_name(name):
     Returns the path of the ftDuino with the specified `name`.
 
     :param name: Name of the ftDuino.
-    :return: The path of the ftDuino or ```None``` if the ftDuino was not found.
+    :return: The path of the ftDuino or ``None`` if the ftDuino was not found.
     """
     for path, device_name in ftduino_iter():
         if device_name == name:

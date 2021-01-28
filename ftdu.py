@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2019 -- Lars Heuer - Semagia <http://www.semagia.com/>.
+# Copyright (c) 2019 - 2021 -- Lars Heuer
 # All rights reserved.
 #
 # License: BSD License
@@ -16,7 +16,7 @@ import time
 import serial
 import serial.tools.list_ports
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 # <https://wiki.python.org/moin/PortingToPy3k/BilingualQuickRef#New_Style_Classes>
 __metaclass__ = type
@@ -101,10 +101,8 @@ class BaseFtDuino:
         conn.reset_output_buffer()
         cmd += '\n'
         conn.write(cmd.encode('utf-8'))
-        data = conn.readline().decode('utf-8')
-        if data == '\n':
-            return None
-        return data[:-2]
+        data = conn.readline().decode('utf-8').rstrip('\r\n')
+        return data if data != '' else None
 
     def close(self):
         """\

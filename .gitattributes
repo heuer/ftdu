@@ -1,0 +1,5 @@
+*.py text eol=lf
+*.pyi text eol=lf
+*.rst text eol=lf
+LICEN[CS]E text eol=lf
+py.typed text eol=lf
